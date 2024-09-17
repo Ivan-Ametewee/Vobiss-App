@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "653291352238",
+    "project_id": "vobiss-app",
+    "storage_bucket": "vobiss-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653291352238:android:39e382dfee7d9b1a8c3d3f",
+        "android_client_info": {
+          "package_name": "com.ivan.vobiss_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKxmPrxRjbnnIG-lTvXjqWllKCc7ZQxRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
