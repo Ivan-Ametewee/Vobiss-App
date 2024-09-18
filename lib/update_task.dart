@@ -17,6 +17,20 @@ class updateTask extends StatefulWidget {
 
 class _updateTaskState extends State<updateTask> {
   //final ImagePicker _picker = ImagePicker();
+  String? taskId;  // Declare taskId variable
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // Retrieve the taskId from the arguments passed via Navigator from taskList
+    final arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    
+    if (arguments != null) {
+      taskId = arguments['taskDescription']; //Changed taskDescription to the taskId
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +50,9 @@ class _updateTaskState extends State<updateTask> {
                 borderRadius: BorderRadius.circular(30.0),
                 child: MaterialButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, CameraScreen.id);
+                    Navigator.pushNamed(context, CameraScreen.id,
+                      arguments: {'taskId': taskId,},
+                    );
                   },
                   minWidth: 200.0,
                   height: 42.0,
@@ -50,7 +66,9 @@ class _updateTaskState extends State<updateTask> {
                 borderRadius: BorderRadius.circular(30.0),
                 child: MaterialButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, UploadScreen.id);
+                    Navigator.pushNamed(context, UploadScreen.id,
+                      arguments: {'taskId': taskId,},
+                    );
                   },
                   minWidth: 200.0,
                   height: 42.0,

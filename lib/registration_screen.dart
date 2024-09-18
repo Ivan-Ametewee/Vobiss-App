@@ -36,14 +36,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   // Use the add method to automatically generate a document ID.
-  await users.add({
+  //Using set method so i assign my own primary key
+  await users.doc(email).set({
     'role': user, 
     'email': email,
     'username': username,
     'password': password,
     'createdAt': FieldValue.serverTimestamp(),  // Add a timestamp
   }).then((value) {
-    print("User Added with ID: ${value.id}");
+    print("User Added with ID: $email");
   }).catchError((error) {
     print("Failed to add user: $error");
   });

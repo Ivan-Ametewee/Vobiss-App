@@ -1,4 +1,7 @@
+//Todo: When the user selects the team members, inital data entered before selecton goes, implement a function to save screen state;
+
 import 'package:flutter/material.dart';
+import 'package:vobiss_app/assign_team.dart';
 import 'package:vobiss_app/tasks_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'location_picker.dart';
@@ -12,11 +15,41 @@ class createTask extends StatefulWidget {
   State<createTask> createState() => _createTaskState();
 }
 
+class TeamMember {
+  final String id;
+  final String username;
+  final String role;
+
+  TeamMember({required this.id, required this.username, required this.role});
+}
+
+// Usage:
+//List<TeamMember> selectedMembers = [];
 
 
 class _createTaskState extends State<createTask> {
 
   final TextEditingController _locationController = TextEditingController();
+  late String taskDescription;
+  late String location;
+  String dropDownValue = 'TSS';
+  var items = ['TSS', 'DEPLOYMENT', 'MAINTENEANCE'];
+  late List<String> _selectedMembers;
+  String status = 'Pending';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    print('Received arguments: $arguments'); // Debug statement
+   // Ensure arguments are not null
+    if (arguments != null) {
+      _selectedMembers = arguments['selectedMembers'] ?? [];
+    } else {
+      _selectedMembers = []; // Fallback if no members were passed
+    }
+  }
+
 
   @override
   void dispose() {
@@ -40,10 +73,6 @@ class _createTaskState extends State<createTask> {
     }
   }
 
-  late String taskDescription;
-  late String location;
-  String dropDownValue = 'TSS';
-  var items = ['TSS', 'DEPLOYMENT', 'MAINTENEANCE'];
   //@override
 
   //Function to store task creation information in the firestore database
@@ -51,17 +80,26 @@ class _createTaskState extends State<createTask> {
   CollectionReference taskCreation = FirebaseFirestore.instance.collection('tasks');
 
   // Use the add method to automatically generate a document ID.
-  await taskCreation.add({
+  //I used set method to assign my own primary key
+  await taskCreation.doc(taskDescription).set({
     'task': taskDescription, 
+    'status': status,
     'location': location,
     'task_type': dropDownValue,
+    'assigned_members': _selectedMembers,
     'createdAt': FieldValue.serverTimestamp(),  // Add a timestamp
   }).then((value) {
-    print("Task Added with ID: ${value.id}");
+    print("Task Added with ID: $taskDescription");
   }).catchError((error) {
     print("Failed to add task: $error");
+    Navigator.pop(context);
   });
+
+  FirebaseFirestore.instance.collection('tasks').doc(taskDescription).collection('uploaded_media');
+  
 }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -108,6 +146,18 @@ class _createTaskState extends State<createTask> {
                 });
               }),
           const SizedBox(height: 48.0),
+          Material(
+            elevation: 5.0,
+            color: Colors.green,
+            child: MaterialButton(
+              onPressed: (){
+                Navigator.pushNamed(context, AssignTeamScreen.id);
+                  },
+              minWidth: 200.0,
+              height: 42.0,
+              child: const Text('Assign Team'),),
+          ),
+          const SizedBox(height: 48.0,),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Material(
@@ -119,7 +169,10 @@ class _createTaskState extends State<createTask> {
 
                   saveTaskData();
                   //Go to tasks screen.
-                  Navigator.pushNamed(context, TaskScreen.id);
+                  Navigator.pushNamed(context,
+                    TaskScreen.id, 
+                    arguments: {'selectedMembers': _selectedMembers},
+                  );
                 },
                 minWidth: 200.0,
                 height: 42.0,

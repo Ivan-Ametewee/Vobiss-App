@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CameraScreen extends StatefulWidget {
   static const String id = 'camera_screen';
@@ -13,6 +14,18 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   bool _isUploading = false; // Track upload status
+  String? taskId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Retrieve taskId from the arguments
+    final arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (arguments != null) {
+      taskId = arguments['taskId'];
+    }
+  }
 
   Future<void> _takePictureOrVideo(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
@@ -69,7 +82,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future<void> _uploadFile(XFile file, {required bool isVideo}) async {
     try {
-      final storageRef = FirebaseStorage.instance.ref().child('uploads/${file.name}');
+      final storageRef = FirebaseStorage.instance.ref().child('tasks/$taskId/media/${file.name}');
       File fileToUpload = File(file.path);
 
       // Upload the file (same for image or video)
@@ -78,6 +91,15 @@ class _CameraScreenState extends State<CameraScreen> {
       // Get the download URL
       String downloadURL = await storageRef.getDownloadURL();
       print('Download URL: $downloadURL');
+
+      await FirebaseFirestore.instance.collection('tasks').doc(taskId).collection('uploaded_media').add({
+        'url': downloadURL,
+        'uploadedAt': FieldValue.serverTimestamp(),
+        'fileName': file.name,
+      });
+      
+      
+      print('File uploaded and stored for task: $taskId');
 
       // Return the download URL to the previous screen
       Navigator.pop(context, downloadURL);
@@ -94,12 +116,12 @@ class _CameraScreenState extends State<CameraScreen> {
       ),
       body: Center(
         child: _isUploading
-            ? Column(
+            ? const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(), // Loader while uploading
-                  const SizedBox(height: 20),
-                  const Text('Uploading...'),
+                  SizedBox(height: 20),
+                  Text('Uploading...'),
                 ],
               )
             : ElevatedButton(

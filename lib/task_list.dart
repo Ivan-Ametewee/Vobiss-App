@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:vobiss_app/tasks_screen.dart';
 import 'package:vobiss_app/update_task.dart';
 
 class TasksListScreen extends StatelessWidget {
@@ -44,15 +45,12 @@ class TasksListScreen extends StatelessWidget {
               // Wrap the ListTile with InkWell to make it tappable
               return InkWell(
                 onTap: () {
-                  // Navigate to TaskDetailsScreen with task details
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const updateTask(
-                        //title: taskTitle,
-                        //description: taskDescription,
-                      ),
-                    ),
+                  // Navigate to (update task screen for now)TaskDetailsScreen with task details
+                  Navigator.pushNamed(
+                    context, 
+                    updateTask.id,
+                    arguments: {'taskDescription': taskDescription},
+                    
                   );
                 },
                 child: ListTile(

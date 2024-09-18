@@ -1,6 +1,7 @@
 //import 'package io.flutter.app';
 
 import 'package:flutter/material.dart';
+import 'package:vobiss_app/assign_team.dart';
 import 'package:vobiss_app/camera_screen.dart';
 //import 'package:image_picker/image_picker.dart';
 import 'package:vobiss_app/image_picker.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         TasksListScreen.id: (context) => const TasksListScreen(),
         ImagePickerScreen.id: (context) => const ImagePickerScreen(),
         CameraScreen.id: (context) => const CameraScreen(),
+        AssignTeamScreen.id: (context) => AssignTeamScreen(),
       },
     );
   }
