@@ -15,6 +15,7 @@ class UploadScreen extends StatefulWidget {
 class _UploadScreenState extends State<UploadScreen> {
   bool _isUploading = false; // Track the upload status
   String? taskId;
+  List<String> urls = [];
 
   @override
   void didChangeDependencies() {
@@ -90,6 +91,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
       // Get the download URL
       String downloadURL = await storageRef.getDownloadURL();
+      urls.add(downloadURL);
       print('Download URL: $downloadURL');
       
       await FirebaseFirestore.instance.collection('tasks').doc(taskId).collection('uploaded_media').add({
@@ -97,11 +99,16 @@ class _UploadScreenState extends State<UploadScreen> {
         'uploadedAt': FieldValue.serverTimestamp(),
         'fileName': file.name,
       });
+
+      
+      FirebaseFirestore.instance.collection('tasks').doc(taskId).set({  
+        'urls': FieldValue.arrayUnion([downloadURL]),  // Add the new URL to the existing list or create the list if it doesn't already exist
+      }, SetOptions(merge: true));
       
       
       print('File uploaded and stored for task: $taskId');
       // Return the download URL to the previous screen
-      Navigator.pop(context, downloadURL);
+      Navigator.pop(context, urls);
     } catch (e) {
       print('Error uploading file: $e');
     }

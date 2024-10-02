@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:vobiss_app/assign_team.dart';
+import 'package:vobiss_app/backup_team.dart';
 import 'package:vobiss_app/camera_screen.dart';
 //import 'package:image_picker/image_picker.dart';
 import 'package:vobiss_app/image_picker.dart';
+import 'package:vobiss_app/task_details.dart';
 import 'package:vobiss_app/task_list.dart';
 import 'package:vobiss_app/upload_screen.dart';
+import 'package:vobiss_app/view_tasks.dart';
 //import 'package:mysql1/mysql1.dart';
 import 'package:vobiss_app/welcome_screen.dart';
 import 'package:vobiss_app/login_screen.dart';
@@ -16,11 +19,13 @@ import 'package:vobiss_app/create_task.dart';
 import 'package:vobiss_app/update_task.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
 
 //import androidx.multidex.MultiDexApplication;
 
 Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -56,6 +61,9 @@ class MyApp extends StatelessWidget {
         ImagePickerScreen.id: (context) => const ImagePickerScreen(),
         CameraScreen.id: (context) => const CameraScreen(),
         AssignTeamScreen.id: (context) => AssignTeamScreen(),
+        ViewTasksScreen.id: (context) => const ViewTasksScreen(),
+        TaskDetailScreen.id: (context) => const TaskDetailScreen(),
+        AssignBackupTeamScreen.id: (context) => const AssignBackupTeamScreen()
       },
     );
   }

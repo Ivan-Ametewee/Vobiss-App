@@ -89,18 +89,18 @@ class _AssignTeamScreenState extends State<AssignTeamScreen> {
             itemCount: members.length,
             itemBuilder: (context, index) {
               final member = members[index];
-              final memberName = member['username']; // Adjust based on your Firestore document structure
-              final memberId = member.id;
+              final memberName = member['username']; 
+              //final memberId = member.id;
 
               return CheckboxListTile(
                 title: Text(memberName),
-                value: _selectedMembers.contains(memberId),
+                value: _selectedMembers.contains(memberName),
                 onChanged: (bool? checked) {
                   setState(() {
                     if (checked == true) {
-                      _selectedMembers.add(memberId);
+                      _selectedMembers.add(memberName);
                     } else {
-                      _selectedMembers.remove(memberId);
+                      _selectedMembers.remove(memberName);
                     }
                   });
                 },

@@ -36,6 +36,7 @@ class _createTaskState extends State<createTask> {
   var items = ['TSS', 'DEPLOYMENT', 'MAINTENEANCE'];
   late List<String> _selectedMembers;
   String status = 'Pending';
+  List<String> urls =[];
 
   @override
   void didChangeDependencies() {
@@ -87,6 +88,7 @@ class _createTaskState extends State<createTask> {
     'location': location,
     'task_type': dropDownValue,
     'assigned_members': _selectedMembers,
+    //'urls': urls,
     'createdAt': FieldValue.serverTimestamp(),  // Add a timestamp
   }).then((value) {
     print("Task Added with ID: $taskDescription");
