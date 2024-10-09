@@ -30,25 +30,33 @@ class TeamMember {
 class _createTaskState extends State<createTask> {
 
   final TextEditingController _locationController = TextEditingController();
-  late String taskDescription;
-  late String location;
+  String? taskDescription;
+  String? location;
   String dropDownValue = 'TSS';
   var items = ['TSS', 'DEPLOYMENT', 'MAINTENEANCE'];
   late List<String> _selectedMembers;
   String status = 'Pending';
   List<String> urls =[];
+  String? userRole;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final createTaskArgument = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     print('Received arguments: $arguments'); // Debug statement
+    print('Received createTaskarguments: $createTaskArgument'); // Debug statement
+
    // Ensure arguments are not null
     if (arguments != null) {
       _selectedMembers = arguments['selectedMembers'] ?? [];
     } else {
       _selectedMembers = []; // Fallback if no members were passed
     }
+
+    if (createTaskArgument != null) {
+      userRole = createTaskArgument['userRole'];
+    } 
   }
 
 
@@ -173,7 +181,10 @@ class _createTaskState extends State<createTask> {
                   //Go to tasks screen.
                   Navigator.pushNamed(context,
                     TaskScreen.id, 
-                    arguments: {'selectedMembers': _selectedMembers},
+                    arguments: {
+                      'selectedMembers': _selectedMembers,
+                      'userRole': userRole,
+                      },
                   );
                 },
                 minWidth: 200.0,

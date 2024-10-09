@@ -20,6 +20,7 @@ class updateTask extends StatefulWidget {
 class _updateTaskState extends State<updateTask> {
   //final ImagePicker _picker = ImagePicker();
   String? taskId;  // Declare taskId variable
+  String userRole = '';
 
   @override
   void didChangeDependencies() {
@@ -30,6 +31,7 @@ class _updateTaskState extends State<updateTask> {
     
     if (arguments != null) {
       taskId = arguments['taskDescription']; //Changed taskDescription to the taskId
+      userRole = arguments['userRole'];
     }
   }
 
@@ -104,36 +106,40 @@ class _updateTaskState extends State<updateTask> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 24.0),
-              Material(
-                elevation: 5.0,
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    pauseTask(context, taskId!);
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: const Text('Pause Task'),
+              if(userRole == 'Manager' || userRole == 'Supervisor')...[
+                Material(
+                  elevation: 5.0,
+                  color: Colors.lightBlueAccent,
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: 
+                    MaterialButton(
+                    onPressed: () {
+                      pauseTask(context, taskId!);
+                    },
+                    minWidth: 200.0,
+                    height: 42.0,
+                    child: const Text('Pause Task'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24.0,),
-              Material(
-                elevation: 5.0,
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context, AssignBackupTeamScreen.id,
-                      arguments: {'taskId': taskId}
-                      );
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: const Text('Assign Backup Team'),
+              
+                const SizedBox(height: 24.0,),
+                Material(
+                  elevation: 5.0,
+                  color: Colors.lightBlueAccent,
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: MaterialButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context, AssignBackupTeamScreen.id,
+                        arguments: {'taskId': taskId}
+                        );
+                    },
+                    minWidth: 200.0,
+                    height: 42.0,
+                    child: const Text('Assign Backup Team'),
+                  ),
                 ),
-              ),
+              ],
               const SizedBox(height: 24.0),
               Material(
                 elevation: 5.0,
@@ -169,23 +175,6 @@ class _updateTaskState extends State<updateTask> {
             ],
           ),
         )
-      
-    );
-  }
-
-  Widget buildButton(String text) {
-    return Material(
-      elevation: 5.0,
-      color: Colors.lightBlueAccent,
-      borderRadius: BorderRadius.circular(30.0),
-      child: MaterialButton(
-        onPressed: () {
-      
-        },
-        minWidth: 200.0,
-        height: 42.0,
-        child: Text(text),
-      ),
     );
   }
 }

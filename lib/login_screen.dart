@@ -146,7 +146,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             });
       
                             // Go to tasks screen.
-                            Navigator.pushReplacementNamed(context, TaskScreen.id);
+                            Navigator.pushReplacementNamed(
+                              context, TaskScreen.id,
+                              arguments: {
+                                'email': email,
+                                'userRole': user,
+                                });
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               print('The password provided is too weak.');

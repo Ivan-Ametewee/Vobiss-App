@@ -3,13 +3,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:vobiss_app/tasks_screen.dart';
 import 'package:vobiss_app/update_task.dart';
 
-class TasksListScreen extends StatelessWidget {
+class TasksListScreen extends StatefulWidget {
   static const String id = 'tasks_list';
 
   const TasksListScreen({super.key});
 
   @override
+  State<TasksListScreen> createState() => _TasksListScreenState();
+}
+
+class _TasksListScreenState extends State<TasksListScreen> {
+  String? userRole;
+
+  @override
+  
+
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (arguments != null) {
+      userRole = arguments['userRole'];
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tasks'),
@@ -49,8 +62,10 @@ class TasksListScreen extends StatelessWidget {
                   Navigator.pushNamed(
                     context, 
                     updateTask.id,
-                    arguments: {'taskDescription': taskDescription},
-                    
+                    arguments: {
+                      'taskDescription': taskDescription,
+                      'userRole': userRole,
+                      },
                   );
                 },
                 child: ListTile(
